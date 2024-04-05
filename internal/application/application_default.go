@@ -24,7 +24,7 @@ type ConfigApplicationDefault struct {
 func NewApplicationDefault(config *ConfigApplicationDefault) *ApplicationDefault {
 	// default values
 	defaultCfg := &ConfigApplicationDefault{
-		Db:      nil,
+		Db:   nil,
 		Addr: ":8080",
 	}
 	if config != nil {
@@ -37,7 +37,7 @@ func NewApplicationDefault(config *ConfigApplicationDefault) *ApplicationDefault
 	}
 
 	return &ApplicationDefault{
-		cfgDb:      defaultCfg.Db,
+		cfgDb:   defaultCfg.Db,
 		cfgAddr: defaultCfg.Addr,
 	}
 }
@@ -93,18 +93,23 @@ func (a *ApplicationDefault) SetUp() (err error) {
 	a.router.Route("/customers", func(r chi.Router) {
 		// - GET /customers
 		r.Get("/", hdCustomer.GetAll())
+		r.Get("/totals_by_condition", hdCustomer.GetTotalsByCondition())
+		r.Get("/top_active", hdCustomer.GetTopActive())
 		// - POST /customers
 		r.Post("/", hdCustomer.Create())
 	})
 	a.router.Route("/products", func(r chi.Router) {
 		// - GET /products
 		r.Get("/", hdProduct.GetAll())
+		r.Get("/top_sellers", hdProduct.GetTopSellers())
 		// - POST /products
 		r.Post("/", hdProduct.Create())
 	})
 	a.router.Route("/invoices", func(r chi.Router) {
 		// - GET /invoices
 		r.Get("/", hdInvoice.GetAll())
+		// - GET /invoices/updated_totals
+		r.Get("/updated_totals", hdInvoice.GetUpdatedTotals())
 		// - POST /invoices
 		r.Post("/", hdInvoice.Create())
 	})

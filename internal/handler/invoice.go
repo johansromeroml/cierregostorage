@@ -26,6 +26,7 @@ type InvoiceJSON struct {
 	Total      float64 `json:"total"`
 	CustomerId int     `json:"customer_id"`
 }
+
 // GetAll returns all invoices
 func (h *InvoicesDefault) GetAll() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -57,12 +58,44 @@ func (h *InvoicesDefault) GetAll() http.HandlerFunc {
 	}
 }
 
+// GetAll returns all invoices
+func (h *InvoicesDefault) GetUpdatedTotals() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// request
+		// ...
+
+		// process
+		i, err := h.sv.FindUpdatedTotals()
+		if err != nil {
+			response.Error(w, http.StatusInternalServerError, "error getting invoices")
+			return
+		}
+
+		// response
+		// - serialize
+		ivJSON := make([]InvoiceJSON, len(i))
+		for ix, v := range i {
+			ivJSON[ix] = InvoiceJSON{
+				Id:         v.Id,
+				Datetime:   v.Datetime,
+				Total:      v.Total,
+				CustomerId: v.CustomerId,
+			}
+		}
+		response.JSON(w, http.StatusOK, map[string]any{
+			"message": "invoices found",
+			"data":    ivJSON,
+		})
+	}
+}
+
 // RequestBodyInvoice is a struct that represents the request body for a invoice
 type RequestBodyInvoice struct {
 	Datetime   string  `json:"datetime"`
 	Total      float64 `json:"total"`
 	CustomerId int     `json:"customer_id"`
 }
+
 // Create creates a new invoice
 func (h *InvoicesDefault) Create() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {

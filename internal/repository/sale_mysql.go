@@ -67,3 +67,26 @@ func (r *SalesMySQL) Save(s *internal.Sale) (err error) {
 
 	return
 }
+
+// Save saves the sale into the database.
+func (r *SalesMySQL) SaveWithId(s *internal.Sale) (err error) {
+	// execute the query
+	res, err := r.db.Exec(
+		"INSERT INTO sales (`id`, `quantity`, `product_id`, `invoice_id`) VALUES (?, ?, ?, ?)",
+		(*s).Id, (*s).Quantity, (*s).ProductId, (*s).InvoiceId,
+	)
+	if err != nil {
+		return err
+	}
+
+	// get the last inserted id
+	id, err := res.LastInsertId()
+	if err != nil {
+		return err
+	}
+
+	// set the id
+	(*s).Id = int(id)
+
+	return
+}

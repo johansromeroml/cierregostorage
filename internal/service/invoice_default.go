@@ -19,6 +19,12 @@ func (s *InvoicesDefault) FindAll() (i []internal.Invoice, err error) {
 	return
 }
 
+// FindAll returns all invoices.
+func (s *InvoicesDefault) FindUpdatedTotals() (i []internal.Invoice, err error) {
+	i, err = s.rp.FindUpdatedTotals()
+	return
+}
+
 // Save saves the invoice.
 func (s *InvoicesDefault) Save(i *internal.Invoice) (err error) {
 	err = s.rp.Save(i)

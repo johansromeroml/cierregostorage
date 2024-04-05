@@ -25,6 +25,7 @@ type ProductJSON struct {
 	Description string  `json:"description"`
 	Price       float64 `json:"price"`
 }
+
 // GetAll returns all products
 func (h *ProductsDefault) GetAll() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -55,11 +56,40 @@ func (h *ProductsDefault) GetAll() http.HandlerFunc {
 	}
 }
 
+func (h *ProductsDefault) GetTopSellers() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// request
+		// ...
+
+		// process
+		p, err := h.sv.FindTopSellers()
+		if err != nil {
+			response.Error(w, http.StatusInternalServerError, "error getting products")
+			return
+		}
+
+		// response
+		// - serialize
+		pJSON := make([]internal.TopSeller, len(p))
+		for ix, v := range p {
+			pJSON[ix] = internal.TopSeller{
+				Description: v.Description,
+				Total:       v.Total,
+			}
+		}
+		response.JSON(w, http.StatusOK, map[string]any{
+			"message": "products found",
+			"data":    pJSON,
+		})
+	}
+}
+
 // RequestBodyProduct is a struct that represents the request body for a product
 type RequestBodyProduct struct {
 	Description string  `json:"description"`
 	Price       float64 `json:"price"`
 }
+
 // Create creates a new product
 func (h *ProductsDefault) Create() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {

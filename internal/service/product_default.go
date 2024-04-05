@@ -19,6 +19,11 @@ func (s *ProductsDefault) FindAll() (p []internal.Product, err error) {
 	return
 }
 
+func (s *ProductsDefault) FindTopSellers() (p []internal.TopSeller, err error) {
+	p, err = s.rp.FindTopSellers()
+	return
+}
+
 // Save saves the product.
 func (s *ProductsDefault) Save(p *internal.Product) (err error) {
 	err = s.rp.Save(p)

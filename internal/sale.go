@@ -17,3 +17,26 @@ type Sale struct {
 	// SaleAttributes is the attributes of the sale.
 	SaleAttributes
 }
+
+type SaleJSON struct {
+	Id        int `json:"id"`
+	Quantity  int `json:"quantity"`
+	ProductId int `json:"product_id"`
+	InvoiceId int `json:"invoice_id"`
+}
+
+// ServiceSale is the interface that wraps the basic ServiceSale methods.
+type ServiceSale interface {
+	// FindAll returns all sales.
+	FindAll() (s []Sale, err error)
+	// Save saves a sale.
+	Save(s *Sale) (err error)
+}
+
+// RepositorySale is the interface that wraps the basic Sale methods.
+type RepositorySale interface {
+	// FindAll returns all sales.
+	FindAll() (s []Sale, err error)
+	// Save saves a sale.
+	Save(s *Sale) (err error)
+}

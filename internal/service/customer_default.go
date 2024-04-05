@@ -19,6 +19,16 @@ func (s *CustomersDefault) FindAll() (c []internal.Customer, err error) {
 	return
 }
 
+func (s *CustomersDefault) FindTopActive() (c []internal.TopActiveCustomer, err error) {
+	c, err = s.rp.FindTopActive()
+	return
+}
+
+func (s *CustomersDefault) FindTotalByCondition() (c []internal.CustomerConditionTotals, err error) {
+	c, err = s.rp.FindTotalByCondition()
+	return
+}
+
 // Save saves the customer.
 func (s *CustomersDefault) Save(c *internal.Customer) (err error) {
 	err = s.rp.Save(c)
